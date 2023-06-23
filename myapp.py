@@ -55,7 +55,7 @@ def fetch_research_papers(query):
     try:
         search_query = scholarly.search_pubs(query)
         papers = []
-        for i in range(20):  # Fetch the top 5 papers
+        for i in range(10):  # Fetch the top 5 papers
             try:
                 paper = next(search_query)
                 if isinstance(paper, dict) and 'bib' in paper:
