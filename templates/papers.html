@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Research Papers</title>
+</head>
+<body>
+    <h1>Research Papers</h1>
+    <ul>
+        {% for paper in papers %}
+        <li>
+            <h3>{{ paper['Title'] }}</h3>
+            <p>Citation Count: {{ paper['Citation Count'] }}</p>
+            <p>Author: {{ paper['Author'] }}</p>
+            <a href="{{ paper['URL'] }}" target="_blank">Read Paper</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

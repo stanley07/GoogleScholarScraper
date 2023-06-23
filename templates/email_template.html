@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Research Paper Recommendations</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        h1, h3 {
+            margin: 0;
+        }
+        p {
+            margin: 0;
+            margin-bottom: 8px;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Research Paper Recommendations</h1>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Citation Count</th>
+            <th>Author</th>
+            <th>Read Paper</th>
+        </tr>
+        {% for paper in papers %}
+        <tr>
+            <td><h3>{{ paper['Title'] }}</h3></td>
+            <td>{{ paper['Citation Count'] }}</td>
+            <td>{{ paper['Author'] }}</td>
+            <td><a href="{{ paper['URL'] }}" target="_blank">{{ paper['URL'] }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

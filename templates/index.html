@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title>Research Recommendation</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f7f7f7;
+                margin: 0;
+                padding: 20px;
+            }
+            
+            h1 {
+                text-align: center;
+                color: #333;
+            }
+            
+            .container {
+                max-width: 400px;
+                margin: 0 auto;
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            
+            input[type="text"] {
+                width: 100%;
+                padding: 10px;
+                font-size: 14px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+            
+            input[type="submit"] {
+                width: 100%;
+                padding: 10px;
+                font-size: 16px;
+                font-weight: bold;
+                color: #fff;
+                background-color: #4CAF50;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            
+            input[type="submit"]:hover {
+                background-color: #45a049;
+            }
+        </style>
+</head>
+<body>
+    <h1>Research Recommendation</h1>
+    <form action="/register" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+        <label for="interests">Interests (separated by commas):</label>
+        <input type="text" id="interests" name="interests" required><br><br>
+        <input type="submit" value="Register">
+    </form>
+</body>
+</html>

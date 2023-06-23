@@ -1,0 +1,50 @@
+Title: Quantum plasmonics
+Citation Count: 0
+Author: ['MS Tame', 'KR McEnery', 'ŞK Özdemir', 'J Lee', 'SA Maier']
+URL: https://www.nature.com/articles/nphys2615
+
+Title: Quantum chromodynamics
+Citation Count: 0
+Author: ['W Marciano', 'H Pagels']
+URL: https://www.sciencedirect.com/science/article/pii/0370157378902089
+
+Title: Quantum hadrodynamics
+Citation Count: 0
+Author: ['BD Serot']
+URL: https://iopscience.iop.org/article/10.1088/0034-4885/55/11/001/meta
+
+Title: Quantum computing
+Citation Count: 0
+Author: ['A Steane']
+URL: https://iopscience.iop.org/article/10.1088/0034-4885/61/2/002/meta
+
+Title: Quantum theory
+Citation Count: 0
+Author: ['D Bohm']
+URL: https://books.google.com/books?hl=en&lr=&id=hEHCAgAAQBAJ&oi=fnd&pg=PA3&dq=quantum&ots=n1Qi27ulID&sig=ci-9uKvEos6sEbkAdXlaMurWg5Y
+
+Title: Quantum estimation for quantum technology
+Citation Count: 0
+Author: ['MGA Paris']
+URL: https://www.worldscientific.com/doi/abs/10.1142/S0219749909004839
+
+Title: Quantum information
+Citation Count: 0
+Author: ['G Jaeger']
+URL: https://link.springer.com/chapter/10.1007/978-0-387-36944-0_5
+
+Title: Quantum strategies
+Citation Count: 0
+Author: ['DA Meyer']
+URL: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.82.1052
+
+Title: What Is Quantum?
+Citation Count: 0
+Author: ['B Wu']
+URL: https://link.springer.com/chapter/10.1007/978-981-19-7626-1_1
+
+Title: Quarkonia and quantum chromodynamics
+Citation Count: 0
+Author: ['W Buchmüller', 'SHH Tye']
+URL: https://journals.aps.org/prd/abstract/10.1103/PhysRevD.24.132
+

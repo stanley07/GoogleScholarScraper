@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weekly Research Paper Updates</title>
+</head>
+<body>
+    <h1>Weekly Research Paper Updates</h1>
+    <p>Here are the latest research papers based on your interests:</p>
+    <ul>
+    {% for paper in papers %}
+        <li>
+            <strong>Title:</strong> {{ paper['Title'] }}<br>
+            <strong>Citation Count:</strong> {{ paper['Citation Count'] }}<br>
+            <strong>Author:</strong> {{ paper['Author'] }}<br>
+            <a href="{{ paper['URL'] }}">Read Paper</a>
+        </li>
+    {% endfor %}
+    </ul>
+    <p>You will receive updates like this every Sunday at 9 a.m.</p>
+</body>
+</html>
