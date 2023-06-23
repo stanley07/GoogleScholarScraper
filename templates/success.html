@@ -2,23 +2,38 @@
 <html>
 <head>
     <title>Success</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-    <h1>Registration Successful!</h1>
-    <p>Email: {{ email }}</p>
-    <p>Interests: {{ interests }}</p>
-    <h2>Research Papers:</h2>
-    <ul>
-        {% for paper in papers %}
-        <li>
-            <a href="{{ paper.URL }}" target="_blank">{{ paper.Title }}</a>
-            <ul>
-                <li>Citation Count: {{ paper['Citation Count'] }}</li>
-                <li>Authors: {{ paper.Authors }}</li>
-            </ul>
-        </li>
-        {% endfor %}
-    </ul>
-    <p>{{ message }}</p>
+    <div class="container">
+        <h1>Registration Successful</h1>
+
+        <h2>Details:</h2>
+        <p><strong>Email:</strong> {{ email }}</p>
+        <p><strong>Interests:</strong> {{ interests }}</p>
+
+        <h2>Research Papers:</h2>
+        <ul class="papers-list">
+            {% for paper in papers %}
+            <li>
+                <h3>{{ paper['Title'] }}</h3>
+                <p><strong>Citation Count:</strong> {{ paper['Citation Count'] }}</p>
+                <p><strong>Authors:</strong> {{ paper['Authors'] }}</p>
+                <p><strong>URL:</strong> <a href="{{ paper['URL'] }}" target="_blank">{{ paper['URL'] }}</a></p>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <p class="message">{{ message }}</p>
+
+        <p class="note">Note: You will receive your next weekly update on Monday, September 30, 2023.</p>
+
+        <p class="signature">HackSharks by taskade<br>Team Stanley</p>
+    </div>
 </body>
 </html>

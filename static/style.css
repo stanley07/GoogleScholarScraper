@@ -1,80 +1,82 @@
-/* style.css */
+/* styles.css */
 
-/* Body styles */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-  /* Header styles */
-  header {
-    background-color: #333;
-    color: #fff;
-    padding: 20px;
-  }
-  
-  h1 {
-    font-size: 24px;
-    margin: 0;
-  }
-  
-  /* Content styles */
-  .container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-  }
-  
-  h2 {
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-  
-  p {
-    margin-bottom: 15px;
-  }
-  
-  /* Footer styles */
-  footer {
-    background-color: #333;
-    color: #fff;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  footer p {
-    margin: 0;
-  }
-  
-  /* Form styles */
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  label {
-    display: block;
-    font-weight: bold;
-  }
-  
-  input[type="text"],
-  input[type="email"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  button {
-    padding: 10px 20px;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #555;
-  }
-  
+/* Container styles */
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading styles */
+h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+  font-family: 'Georgia', serif;
+  color: #333;
+}
+
+h2 {
+  font-size: 24px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  font-family: 'Georgia', serif;
+  color: #555;
+}
+
+/* Paper list styles */
+.papers-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.papers-list li {
+  margin-bottom: 20px;
+}
+
+.papers-list h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+/* Message styles */
+.message {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #006400;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Note styles */
+.note {
+  font-size: 14px;
+  color: #808080;
+  margin-top: 10px;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Signature styles */
+.signature {
+  margin-top: 40px;
+  font-size: 14px;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Link styles */
+a {
+  color: #0066cc;
+  text-decoration: none;
+  font-family: 'Arial', sans-serif;
+}
+
+a:hover {
+  text-decoration: underline;
+}
