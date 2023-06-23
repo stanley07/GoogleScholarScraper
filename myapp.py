@@ -93,7 +93,7 @@ def create_email_content(name, email, interests, papers):
     body += f"Your email: {email}<br>Your interests: {interests}<br><br>"
 
     # Fetch the success page HTML
-    success_page_url = 'http://127.0.0.1:8000/success'
+    success_page_url = 'https://scholar-spy.onrender.com/success'
     params = {'email': email, 'interests': interests, 'status': 'success'}
     response = requests.get(success_page_url, params=params)
     success_page_html = response.text
@@ -110,6 +110,7 @@ def create_email_content(name, email, interests, papers):
     body += f"<br>You will receive your next weekly update on {next_update_date_str}.<br><br>"
     body += "<br>Best regards,<br>The Example App Team"
     return subject, body
+
 
 def send_email(email, subject, content, attachment_filenames):
     try:
@@ -189,10 +190,12 @@ def success():
         elif status == 'failure':
             message = 'Failed to send email. Please try again.'
 
-        return render_template('success.html', email=email, interests=interests, papers=papers, message=message)
+        success_page_url = 'https://scholar-spy.onrender.com/success'  # Update the URL here
+        return render_template('success.html', email=email, interests=interests, papers=papers, message=message, success_page_url=success_page_url)
     except Exception as e:
         print(f"Error occurred in success route: {str(e)}")
         traceback.print_exc()
+
 
 @app.route('/register', methods=['POST'])
 def register():
