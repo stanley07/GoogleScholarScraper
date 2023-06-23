@@ -1,6 +1,6 @@
 alabaster==0.7.13
 anyio==3.7.0
-APScheduler==3.10.1
+APScheduler==3.7.0
 arrow==1.2.3
 async-generator==1.10
 attrs==23.1.0
@@ -56,7 +56,7 @@ sphinxcontrib-serializinghtml==1.1.5
 trio==0.22.0
 trio-websocket==0.10.3
 typing_extensions==4.6.3
-tzlocal==5.0.1
+tzlocal>=2.0
 urllib3==2.0.3
 Werkzeug==2.2.3
 wrapt==1.15.0
