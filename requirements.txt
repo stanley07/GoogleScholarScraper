@@ -1,5 +1,6 @@
 alabaster==0.7.13
 anyio==3.7.0
+APScheduler==3.10.1
 arrow==1.2.3
 async-generator==1.10
 attrs==23.1.0
@@ -32,6 +33,7 @@ pyparsing==3.1.0
 PySocks==1.7.1
 python-dateutil==2.8.2
 python-dotenv==1.0.0
+pytz==2023.3
 requests==2.31.0
 schedule==1.2.0
 scholarly==1.7.11
@@ -53,6 +55,7 @@ sphinxcontrib-serializinghtml==1.1.5
 trio==0.22.0
 trio-websocket==0.10.3
 typing_extensions==4.6.3
+tzlocal==5.0.1
 urllib3==2.0.3
 Werkzeug==2.3.6
 wrapt==1.15.0
