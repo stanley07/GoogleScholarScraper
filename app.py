@@ -93,7 +93,7 @@ def create_email_content(name, email, interests, papers):
     body += f"Your email: {email}<br>Your interests: {interests}<br><br>"
 
     # Fetch the success page HTML
-    success_page_url = 'http://127.0.0.1:5000/success'
+    success_page_url = 'http://127.0.0.1:8000/success'
     params = {'email': email, 'interests': interests, 'status': 'success'}
     response = requests.get(success_page_url, params=params)
     success_page_html = response.text
@@ -234,5 +234,5 @@ if __name__ == '__main__':
     scheduler_thread = threading.Thread(target=start_weekly_email_scheduler)
     scheduler_thread.start()
 
-    app.run(debug=True)
+    app.run(debug=False, port=8000)
 
