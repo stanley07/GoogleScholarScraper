@@ -226,10 +226,10 @@ def send_weekly_emails():
 
         # Send email to the user
         email_subject = 'Weekly Research Papers Recommendation'
-        email_body = render_template('email.html', papers=papers)  # Updated template name
+        email_body = render_template('email_template.html', papers=papers)  # Updated template name
         send_email(email, email_subject, email_body)
 
-        # Update the last_sent_email field in the user table
+        # Update the last sent email time for the user
         conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         cursor.execute('UPDATE user SET last_sent_email = ? WHERE email = ?', (datetime.datetime.now(), email))
@@ -237,13 +237,13 @@ def send_weekly_emails():
         conn.close()
 
 
-def start_weekly_email_scheduler():
-    # Schedule the weekly email task to run every Monday at 9:00 AM
-    schedule.every().monday.at('09:00').do(send_weekly_emails)
+def schedule_weekly_emails():
+    # Schedule the weekly email job
+    schedule.every().monday.at('09:00').do(send_weekly_emails)  # Update the day and time as needed
 
     # Start the scheduler in a separate thread
-    scheduler_thread = threading.Thread(target=run_scheduler)
-    scheduler_thread.start()
+    thread = threading.Thread(target=run_scheduler)
+    thread.start()
 
 
 def run_scheduler():
@@ -254,6 +254,5 @@ def run_scheduler():
 
 if __name__ == '__main__':
     create_user_table()
-    start_weekly_email_scheduler()
-    app.run(debug=False, port=8000)
-
+    schedule_weekly_emails()
+    app.run(debug=True)
