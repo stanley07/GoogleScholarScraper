@@ -1,14 +1,12 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, render_template_string
+from flask_mail import Mail, Message
 import sqlite3
-from scholarly import scholarly
-import smtplib
-import traceback
-import datetime
-import threading
 import requests
-import time
-from email.message import EmailMessage
+import datetime
+import traceback
+import threading
 import schedule
+import time
 
 app = Flask(__name__)
 
@@ -18,9 +16,27 @@ SMTP_PORT = 587
 SMTP_USERNAME = 'ezebo001@outlook.com'  # Update with your Outlook email address
 SMTP_PASSWORD = 'uoipfbsohdreooqd'  # Update with your Outlook password
 
+# Database Configuration
+DATABASE = 'database.db'
+
+# IEEE API Configuration
+API_KEY = 'xr3m4esj7zek56daaj6a4wxz'
+BASE_URL = 'https://ieeexploreapi.ieee.org/api/v1/search/articles'
+
+# Flask-Mail Configuration
+app.config['MAIL_SERVER'] = SMTP_HOST
+app.config['MAIL_PORT'] = SMTP_PORT
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = SMTP_USERNAME
+app.config['MAIL_PASSWORD'] = SMTP_PASSWORD
+app.config['MAIL_DEFAULT_SENDER'] = SMTP_USERNAME
+
+mail = Mail(app)
+
+
 def create_user_table():
     try:
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS user (
@@ -38,12 +54,15 @@ def create_user_table():
         if conn:
             conn.close()
 
+
 def insert_user(name, email, interests):
     try:
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO user (name, email, interests, last_sent_email) VALUES (?, ?, ?, ?)',
-                       (name, email, interests, datetime.datetime.now()))
+        cursor.execute(
+            'INSERT INTO user (name, email, interests, last_sent_email) VALUES (?, ?, ?, ?)',
+            (name, email, interests, datetime.datetime.now())
+        )
         conn.commit()
     except sqlite3.Error as e:
         print(f"Error occurred while inserting user: {str(e)}")
@@ -51,128 +70,61 @@ def insert_user(name, email, interests):
         if conn:
             conn.close()
 
+
 def fetch_research_papers(query):
+    params = {
+        'apikey': API_KEY,
+        'querytext': query,
+        'max_results': 5,  # Adjust the number of results as needed
+        'sort_order': 'asc',  # Sort order: ascending
+        'sort_field': 'article_title'  # Sort by article title
+    }
+
     try:
-        search_query = scholarly.search_pubs(query)
-        papers = []
-        for i in range(5):  # Fetch the top 5 papers
-            try:
-                paper = next(search_query)
-                if isinstance(paper, dict) and 'bib' in paper:
-                    title = paper['bib'].get('title')
-                    citation_count = paper['bib'].get('cites', 0)
-                    authors = paper['bib'].get('author', '')
-                    url = paper['pub_url'] if 'pub_url' in paper else ''
-                    if title:
-                        papers.append({
-                            'Title': title,
-                            'Citation Count': citation_count,
-                            'Authors': authors,
-                            'URL': url
-                        })
-            except Exception as e:
-                print(f"Error occurred while fetching paper: {str(e)}")
-                traceback.print_exc()
-        return papers
-    except Exception as e:
-        print(f"Error occurred while fetching research papers: {str(e)}")
+        response = requests.get(BASE_URL, params=params)
+        response.raise_for_status()
+        data = response.json()
+
+        if 'articles' in data:
+            papers = data['articles']
+            result = []
+            for paper in papers:
+                title = paper['title']
+                authors = ', '.join(paper['authors'])
+                abstract = paper.get('abstract')
+                doi = paper.get('doi', '')  # Check if the 'doi' field is present
+                url = f"https://doi.org/{doi}" if doi else ''  # Generate URL based on DOI if available
+
+                # Append the retrieved paper information to the result list
+                result.append({
+                    'title': title,
+                    'authors': authors,
+                    'abstract': abstract,
+                    'doi': doi,
+                    'url': url
+                })
+
+            return result[:10]  # Return only the first 10 papers
+        else:
+            print("No articles found.")
+            return []
+
+    except requests.exceptions.RequestException as e:
+        print(f'Error: {e}')
         return []
 
-def download_paper(url, title):
-    try:
-        response = requests.get(url)
-        filename = f"{title}.pdf"
-        with open(filename, 'wb') as file:
-            file.write(response.content)
-    except Exception as e:
-        print(f"Error occurred while downloading paper: {str(e)}")
 
-def create_email_content(name, email, interests, papers):
-    subject = "Registration Successful"
-    body = f"Dear {name},<br><br>Thank you for registering!<br><br>"
-    body += f"Your email: {email}<br>Your interests: {interests}<br><br>"
+def send_email(recipient, subject, body):
+    with app.app_context():
+        msg = Message(subject, recipients=[recipient])
+        msg.html = body  # Set the email body as HTML
+        mail.send(msg)
 
-    # Fetch the success page HTML
-    success_page_url = 'https://scholar-spy.onrender.com/success'
-    params = {'email': email, 'interests': interests, 'status': 'success'}
-    response = requests.get(success_page_url, params=params)
-    success_page_html = response.text
-
-    body += success_page_html
-
-    # Calculate the next weekly update date
-    today = datetime.date.today()
-    weekday = today.weekday()  # 0 = Monday, 1 = Tuesday, ..., 6 = Sunday
-    days_until_next_update = (6 - weekday) % 7  # Calculate the number of days until the next Monday
-    next_update_date = today + datetime.timedelta(days=days_until_next_update)
-    next_update_date_str = next_update_date.strftime("%A, %B %d, %Y")
-
-    body += f"<br>You will receive your next weekly update on {next_update_date_str}.<br><br>"
-    body += "<br>Best regards,<br>The Example App Team"
-    return subject, body
-
-
-def send_email(email, subject, content, attachment_filenames):
-    try:
-        message = EmailMessage()
-        message['From'] = SMTP_USERNAME
-        message['To'] = email
-        message['Subject'] = subject
-        message.set_content(content, subtype='html')
-
-        for filename in attachment_filenames:
-            with open(filename, 'rb') as file:
-                file_data = file.read()
-                message.add_attachment(file_data, maintype='application', subtype='pdf', filename=filename)
-
-        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
-            server.starttls()
-            server.login(SMTP_USERNAME, SMTP_PASSWORD)
-            server.send_message(message)
-
-    except smtplib.SMTPException as e:
-        print(f"Error occurred while sending email: {str(e)}")
-        traceback.print_exc()
-
-def send_weekly_emails():
-    # Fetch research papers for all registered users
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM user')
-    users = cursor.fetchall()
-    conn.close()
-
-    for user in users:
-        name, email, interests, last_sent_email = user
-        papers = fetch_research_papers(interests)
-
-        if last_sent_email:
-            last_sent_email = datetime.datetime.strptime(last_sent_email, "%Y-%m-%d %H:%M:%S")
-            current_time = datetime.datetime.now()
-            time_diff = current_time - last_sent_email
-            if time_diff.days < 7:
-                continue
-
-        email_content = create_email_content(name, email, interests, papers)
-        attachment_filenames = []
-        for paper in papers:
-            title = paper.get('Title', '')
-            url = paper.get('URL', '')
-            if url:
-                download_paper(url, title)
-                attachment_filenames.append(f"{title}.pdf")
-        send_email(email, *email_content, attachment_filenames)
-
-        # Update the last_sent_email field in the database
-        conn = sqlite3.connect('database.db')
-        cursor = conn.cursor()
-        cursor.execute('UPDATE user SET last_sent_email = ? WHERE email = ?', (datetime.datetime.now(), email))
-        conn.commit()
-        conn.close()
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/success')
 def success():
@@ -182,7 +134,18 @@ def success():
         status = request.args.get('status')
 
         # Fetch research papers based on user interests
-        papers = fetch_research_papers(interests)
+        papers = fetch_research_papers(interests)[:10]  # Limit the papers to 10
+
+        # Send papers as an email to the user
+        email_subject = 'Research Papers Recommendation'
+        email_body = render_template('email_template.html', papers=papers)  # Updated template name
+        send_email(email, email_subject, email_body)
+
+        # Get recommended papers based on user's previous interests
+        recommended_papers = []
+        previous_interests = get_user_interests(email)
+        if previous_interests:
+            recommended_papers = fetch_research_papers(previous_interests)[:3]  # Limit the recommended papers to 3
 
         message = ''
         if status == 'success':
@@ -190,32 +153,45 @@ def success():
         elif status == 'failure':
             message = 'Failed to send email. Please try again.'
 
-        success_page_url = 'https://scholar-spy.onrender.com/success'  # Update the URL here
-        return render_template('success.html', email=email, interests=interests, papers=papers, message=message, success_page_url=success_page_url)
+        success_page_url = request.url_root + 'success'  # Update the URL here
+        return render_template(
+            'success.html',
+            email=email,
+            interests=interests,
+            papers=papers,
+            recommended_papers=recommended_papers,
+            message=message,
+            success_page_url=success_page_url
+        )
     except Exception as e:
         print(f"Error occurred in success route: {str(e)}")
         traceback.print_exc()
 
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     try:
-        name = request.form['name']
-        email = request.form['email']
-        interests = request.form['interests']
+        if request.method == 'POST':
+            name = request.form['name']
+            email = request.form['email']
+            interests = request.form['interests']
 
-        insert_user(name, email, interests)
+            insert_user(name, email, interests)
 
-        return redirect(f"/success?email={email}&interests={interests}&status=success")
+            return redirect(f"/success?email={email}&interests={interests}&status=success")
+
+        # Handle GET requests to display the registration form
+        return render_template('register.html')
+
     except Exception as e:
         print(f"Error occurred in register route: {str(e)}")
         traceback.print_exc()
- 
         return redirect(f"/success?email={email}&interests={interests}&status=failure")
+
 
 @app.route('/users')
 def view_users():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM user')
     users = cursor.fetchall()
@@ -223,19 +199,61 @@ def view_users():
     return render_template('users.html', users=users)
 
 
-def start_weekly_email_scheduler():
-    schedule.every().monday.at("09:00").do(send_weekly_emails)
+def get_user_interests(email):
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+    cursor.execute('SELECT interests FROM user WHERE email = ?', (email,))
+    result = cursor.fetchone()
+    conn.close()
+    return result[0] if result else None
 
+
+def send_weekly_emails():
+    # Fetch users from the database
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM user')
+    users = cursor.fetchall()
+    conn.close()
+
+    # Send email to each user
+    for user in users:
+        email = user[2]
+        interests = user[3]
+
+        # Fetch research papers based on user interests
+        papers = fetch_research_papers(interests)
+
+        # Send email to the user
+        email_subject = 'Weekly Research Papers Recommendation'
+        email_body = render_template('email.html', papers=papers)  # Updated template name
+        send_email(email, email_subject, email_body)
+
+        # Update the last_sent_email field in the user table
+        conn = sqlite3.connect(DATABASE)
+        cursor = conn.cursor()
+        cursor.execute('UPDATE user SET last_sent_email = ? WHERE email = ?', (datetime.datetime.now(), email))
+        conn.commit()
+        conn.close()
+
+
+def start_weekly_email_scheduler():
+    # Schedule the weekly email task to run every Monday at 9:00 AM
+    schedule.every().monday.at('09:00').do(send_weekly_emails)
+
+    # Start the scheduler in a separate thread
+    scheduler_thread = threading.Thread(target=run_scheduler)
+    scheduler_thread.start()
+
+
+def run_scheduler():
     while True:
         schedule.run_pending()
         time.sleep(1)
 
+
 if __name__ == '__main__':
     create_user_table()
-
-    # Start the scheduler in a separate thread
-    scheduler_thread = threading.Thread(target=start_weekly_email_scheduler)
-    scheduler_thread.start()
-
+    start_weekly_email_scheduler()
     app.run(debug=False, port=8000)
 

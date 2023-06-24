@@ -2,38 +2,88 @@
 <html>
 <head>
     <title>Success</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
     <style>
-        body {
-            background-color: #f2f2f2;
+        /* Add CSS styles for spacing */
+        .paper {
+            margin-bottom: 20px;
+        }
+        .title {
+            font-weight: bold;
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+        .authors {
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+        .abstract {
+            margin-bottom: 10px;
+        }
+        .doi {
+            font-style: italic;
+        }
+        .message {
+            margin-top: 20px;
+        }
+        /* Add CSS styles for footer */
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+        .note {
+            font-size: 12px;
+            color: #777;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .signature {
+            font-size: 12px;
+            color: #777;
+            margin-top: 20px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Registration Successful</h1>
+    <h1>Success</h1>
 
-        <h2>Details:</h2>
-        <p><strong>Email:</strong> {{ email }}</p>
-        <p><strong>Interests:</strong> {{ interests }}</p>
+    <p>Email: {{ email }}</p>
+    <p>Interests: {{ interests }}</p>
 
-        <h2>Research Papers:</h2>
-        <ul class="papers-list">
-            {% for paper in papers %}
-            <li>
-                <h3>{{ paper['Title'] }}</h3>
-                <p><strong>Citation Count:</strong> {{ paper['Citation Count'] }}</p>
-                <p><strong>Authors:</strong> {{ paper['Authors'] }}</p>
-                <p><strong>URL:</strong> <a href="{{ paper['URL'] }}" target="_blank">{{ paper['URL'] }}</a></p>
-            </li>
-            {% endfor %}
-        </ul>
+    {% if papers %}
+        <h2>Research Papers</h2>
+        {% for paper in papers %}
+            <div class="paper">
+                <p class="title" onclick="openUrl('{{ paper['url']|e }}')">{{ paper['title'] }}</p>
+                <p class="authors">{{ paper['authors'] }}</p>
+                {% if paper['abstract'] %}
+                    <p class="abstract">{{ paper['abstract'] }}</p>
+                {% endif %}
+                <p class="doi">
+                    DOI: <a href="{{ paper['url'] }}" target="_blank">{{ paper['doi'] }}</a>
+                </p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No research papers found.</p>
+    {% endif %}
 
-        <p class="message">{{ message }}</p>
+    <p class="message">{{ message }}</p>
 
-        <p class="note">Note: You will receive weekly update on your interests.</p>
-
-        <p class="signature">HackSharks by taskade<br>Team Stanley</p>
+    <div class="footer">
+        <p class="note">Note: You will receive weekly updates on your interests.</p>
+        <p class="signature">HackSharks by taskade<br>&copy; 2023. Team Stanley. All rights reserved.</p>
     </div>
+
+    <script>
+        function openUrl(url) {
+            if (url) {
+                window.open(url, '_blank');
+            }
+        }
+    </script>
 </body>
 </html>

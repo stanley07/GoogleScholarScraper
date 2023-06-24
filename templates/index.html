@@ -34,7 +34,8 @@
                 margin-bottom: 5px;
             }
             
-            input[type="text"] {
+            input[type="text"],
+            input[type="email"] {
                 width: 100%;
                 padding: 10px;
                 font-size: 14px;
@@ -57,9 +58,24 @@
             input[type="submit"]:hover {
                 background-color: #45a049;
             }
+            
+            .note {
+                font-size: 12px;
+                color: #777;
+                margin-top: 20px;
+                text-align: center;
+            }
+            
+            .signature {
+                font-size: 12px;
+                color: #777;
+                margin-top: 20px;
+                text-align: center;
+            }
         </style>
 </head>
 <body>
+  
     <h1>Research Recommendation</h1>
     <form action="/register" method="POST">
         <label for="name">Name:</label>
@@ -69,12 +85,10 @@
         <label for="interests">Interests (separated by commas):</label>
         <input type="text" id="interests" name="interests" required><br><br>
         <input type="submit" value="Register">
-        
     </form>
+    <footer>
+        <p class="note">Note: You will receive weekly updates on your interests.</p>
+        <p class="signature">HackSharks by taskade<br>&copy; 2023. Team Stanley. All rights reserved.</p>
+    </footer>
 </body>
-<footer>
-    <p class="note">Note: You will receive weekly update on your interests</p>
-
-    <p class="signature">HackSharks by taskade<br>Team Stanley</p>
-</footer>
 </html>
