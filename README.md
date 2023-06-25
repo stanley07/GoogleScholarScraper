@@ -26,8 +26,8 @@ Scholar Messenger is a research-focused web application designed to facilitate k
 1. Clone the repository: `git clone https://github.com/stanley07/GoogleScholarScraper.git`
 2. Navigate to the project directory: `cd scholar-messenger`
 3. Install the required dependencies: `pip install -r requirements.txt`
-4. Set up your SMTP configuration in the `app.py` file.
-5. Run the application: `python app.py`
+4. Set up your SMTP configuration in the `myapp.py` file.
+5. Run the application: `python myapp.py`
 6. Access the application in your browser at `http://localhost:5000`
 
 Note: Make sure you have Python 3.x and pip installed on your system.
