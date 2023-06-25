@@ -8,8 +8,6 @@ Scholar Messenger is a research-focused web application designed to facilitate k
 
 - **Paper Recommendations**: Scholar Messenger utilizes the IEEE API to fetch research papers based on user interests. Users can explore recommended papers, view abstracts, authors, and access full-text articles when available.
 
-- **Collaborative Tools**: The application offers collaborative features such as discussion forums, group chats, and shared document repositories, fostering collaboration and knowledge exchange among researchers.
-
 - **Real-Time Notifications**: Users receive real-time notifications about new papers, collaboration requests, and important deadlines, ensuring they stay updated within their research community.
 
 - **Mobile-Friendly Design**: Scholar Messenger is responsive and optimized for mobile devices, allowing users to access the platform conveniently on their smartphones and tablets.
